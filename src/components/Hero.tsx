@@ -1,39 +1,60 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import SplitText from './ui/SplitText';
-import MagneticButton from './ui/MagneticButton';
-import Marquee from './ui/Marquee';
-import IdCard from './IdCard';
-import { useRef } from 'react';
-import { personalInfo, socialLinks, heroMarquee } from '../data/data';
+import { motion, useScroll, useTransform } from "framer-motion";
+import SplitText from "./reactbits/SplitText";
+import Magnet from "./reactbits/Magnet";
+import LogoLoop from "./reactbits/LogoLoop";
+import Aurora from "./reactbits/Aurora";
+import IdCard from "./IdCard";
+import { useRef } from "react";
+import { personalInfo, socialLinks, heroMarquee } from "../data/data";
+
+const primaryLogos = heroMarquee.primary.map((t) => ({
+  node: (
+    <span className="font-mono font-semibold text-muted-foreground/30 tracking-[0.2em]">
+      {t}
+    </span>
+  ),
+}));
+const secondaryLogos = heroMarquee.secondary.map((t) => ({
+  node: <span className="font-mono text-primary/20 tracking-[0.2em]">{t}</span>,
+}));
 
 export default function Hero() {
   const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section id="home" ref={sectionRef} className="relative min-h-screen flex flex-col justify-center pt-16 overflow-hidden">
-      {/* Cinematic aurora */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          className="absolute top-1/4 -left-32 w-[800px] h-[800px] rounded-full blur-[200px]"
-          style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%)' }}
-          animate={{ x: [0, 80, -40, 0], y: [0, -60, 30, 0], scale: [1, 1.2, 0.9, 1] }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+    <section
+      id="home"
+      ref={sectionRef}
+      className="relative min-h-screen flex flex-col justify-center pt-16 overflow-hidden scroll-mt-24"
+    >
+      {/* Cinematic aurora (React Bits) */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Aurora
+          colorStops={["#5be8ff", "#a78bfa", "#5be8ff"]}
+          amplitude={0.6}
+          blend={0.7}
+          speed={0.6}
         />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full blur-[180px]"
-          style={{ background: 'radial-gradient(circle, hsl(var(--secondary) / 0.12), transparent 70%)' }}
-          animate={{ x: [0, -60, 40, 0], y: [0, 40, -60, 0], scale: [1, 0.8, 1.1, 1] }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
         />
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
       </div>
 
-      <motion.div className="container mx-auto px-5 sm:px-6 lg:px-8 relative z-10" style={{ y: heroY, opacity: heroOpacity }}>
+      <motion.div
+        className="container mx-auto px-5 sm:px-6 lg:px-8 relative z-10"
+        style={{ y: heroY, opacity: heroOpacity }}
+      >
         <MetaRow />
 
         <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mt-8">
@@ -48,19 +69,38 @@ export default function Hero() {
             </motion.p>
 
             <h1 className="relative">
-              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] font-bold tracking-tighter leading-[0.85]">
-                <SplitText text={personalInfo.roleLine1} delay={0.3} staggerDelay={0.04} />
+              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] font-bold tracking-tighter leading-[0.85] font-display">
+                <SplitText
+                  text={personalInfo.roleLine1}
+                  tag="span"
+                  textAlign="left"
+                  duration={0.9}
+                  delay={40}
+                  className="text-foreground"
+                />
               </span>
-              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] font-bold tracking-tighter leading-[0.85] text-gradient mt-2">
-                <SplitText text={personalInfo.roleLine2} delay={0.7} staggerDelay={0.04} />
+              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] font-bold tracking-tighter leading-[0.85] font-display text-aurora mt-2">
+                <SplitText
+                  text={personalInfo.roleLine2}
+                  tag="span"
+                  textAlign="left"
+                  duration={0.9}
+                  delay={60}
+                />
               </span>
-              {/* Glowing underline */}
               <motion.div
                 className="h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full mt-4"
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ delay: 1.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                style={{ transformOrigin: 'left', boxShadow: '0 0 20px hsl(var(--primary) / 0.5)' }}
+                transition={{
+                  delay: 1.4,
+                  duration: 0.8,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{
+                  transformOrigin: "left",
+                  boxShadow: "0 0 20px hsl(var(--primary) / 0.5)",
+                }}
               />
             </h1>
 
@@ -70,7 +110,11 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.6 }}
             >
-              {personalInfo.tagline} Based in <strong className="text-foreground">{personalInfo.location}</strong>, working with clients worldwide.
+              {personalInfo.tagline} Based in{" "}
+              <strong className="text-foreground">
+                {personalInfo.location}
+              </strong>
+              , working with clients worldwide.
             </motion.p>
 
             <motion.div
@@ -79,19 +123,33 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.6 }}
             >
-              <MagneticButton>
-                <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer"
-                  className="group relative inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground rounded-lg font-mono text-sm overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(91,232,255,0.4)]">
+              <Magnet magnetStrength={0.35} padding={60}>
+                <a
+                  href={socialLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground rounded-lg font-mono text-sm overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(91,232,255,0.4)]"
+                >
                   <span className="relative z-10">Let's Collaborate →</span>
-                  <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary" initial={{ x: '-100%' }} whileHover={{ x: '100%' }} transition={{ duration: 0.6 }} />
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary"
+                    initial={{ x: "-100%" }}
+                    whileHover={{ x: "100%" }}
+                    transition={{ duration: 0.6 }}
+                  />
                 </a>
-              </MagneticButton>
-              <MagneticButton>
-                <a href={personalInfo.resumeUrl} target={personalInfo.resumeUrl !== '#' ? '_blank' : undefined} rel="noopener noreferrer" className="group relative inline-flex items-center gap-2 px-7 py-3.5 border border-border rounded-lg font-mono text-sm overflow-hidden hover:border-primary/50 transition-all duration-300">
+              </Magnet>
+              <Magnet magnetStrength={0.35} padding={60}>
+                <a
+                  href={personalInfo.resumeUrl}
+                  target={personalInfo.resumeUrl !== "#" ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center gap-2 px-7 py-3.5 border border-border rounded-lg font-mono text-sm overflow-hidden hover:border-primary/50 transition-all duration-300"
+                >
                   <span className="relative z-10">↓ Resume</span>
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
-              </MagneticButton>
+              </Magnet>
             </motion.div>
           </div>
 
@@ -100,16 +158,28 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Marquee */}
+        {/* Dual marquees */}
         <motion.div
           className="mt-20 border-y border-border/50 py-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
         >
-          <Marquee items={heroMarquee.primary} className="font-mono text-lg font-semibold text-muted-foreground/30 tracking-[0.2em]" />
-          <div className="mt-3">
-            <Marquee items={heroMarquee.secondary} className="font-mono text-sm text-primary/20 tracking-[0.2em]" reverse />
+          <LogoLoop
+            logos={primaryLogos}
+            speed={70}
+            logoHeight={24}
+            gap={64}
+            direction="left"
+          />
+          <div className="mt-4">
+            <LogoLoop
+              logos={secondaryLogos}
+              speed={55}
+              logoHeight={18}
+              gap={64}
+              direction="right"
+            />
           </div>
         </motion.div>
 
@@ -122,15 +192,21 @@ export default function Hero() {
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="flex flex-col items-center gap-2"
           >
-            <span className="font-mono text-[10px] text-muted-foreground tracking-[0.3em] uppercase">Scroll</span>
+            <span className="font-mono text-[10px] text-muted-foreground tracking-[0.3em] uppercase">
+              Scroll
+            </span>
             <div className="w-5 h-8 border border-border/50 rounded-full flex justify-center pt-1.5">
               <motion.div
                 className="w-1 h-1.5 bg-primary rounded-full"
                 animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
             </div>
           </motion.div>
@@ -157,7 +233,9 @@ function MetaRow() {
           Available for work
         </div>
       )}
-      <span>{personalInfo.locationFull} — {personalInfo.timezone}</span>
+      <span>
+        {personalInfo.locationFull} — {personalInfo.timezone}
+      </span>
       <span>N°01 / Index</span>
     </motion.div>
   );

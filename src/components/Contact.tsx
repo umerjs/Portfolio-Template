@@ -3,8 +3,8 @@ import { motion, useInView } from 'framer-motion';
 import { Loader2, CheckCircle2, AlertCircle, Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import SectionHeading from './ui/SectionHeading';
-import MagneticButton from './ui/MagneticButton';
-import GlowingBorder from './ui/GlowingBorder';
+import Magnet from './reactbits/Magnet';
+import BorderGlow from './reactbits/BorderGlow';
 import { personalInfo } from '../data/data';
 
 const fields = [
@@ -69,7 +69,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 md:py-32 relative">
+    <section id="contact" className="py-24 md:py-32 relative scroll-mt-24">
       {/* Background glow */}
       <div className="absolute right-0 bottom-0 w-96 h-96 rounded-full blur-[200px] pointer-events-none"
         style={{ background: 'hsl(var(--secondary) / 0.06)' }} />
@@ -81,7 +81,15 @@ export default function Contact() {
           description="Have a project in mind? Fill out the form below and I'll get back to you shortly."
         />
 
-        <GlowingBorder className="max-w-2xl">
+        <BorderGlow
+          className="max-w-2xl"
+          backgroundColor="hsl(214 45% 8%)"
+          glowColor="190 100 68"
+          colors={['#5be8ff', '#a78bfa', '#22d3ee']}
+          animated
+          borderRadius={24}
+          fillOpacity={0.35}
+        >
         <motion.form
           ref={formRef}
           onSubmit={handleSubmit}
@@ -161,7 +169,7 @@ export default function Contact() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            <MagneticButton>
+            <Magnet magnetStrength={0.35} padding={60}>
               <button
                 type="submit"
                 disabled={status === 'loading'}
@@ -181,7 +189,7 @@ export default function Contact() {
                   transition={{ duration: 0.6 }}
                 />
               </button>
-            </MagneticButton>
+            </Magnet>
 
             {status === 'success' && (
               <motion.span
@@ -199,7 +207,7 @@ export default function Contact() {
             )}
           </motion.div>
         </motion.form>
-        </GlowingBorder>
+        </BorderGlow>
       </div>
     </section>
   );

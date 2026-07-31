@@ -1,5 +1,6 @@
 
 import { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 const tailwindConfig: Config = {
   darkMode: ["class"],
@@ -34,6 +35,12 @@ const tailwindConfig: Config = {
           "\"Liberation Mono\"",
           "\"Courier New\"",
           "monospace"
+        ],
+        "display": [
+          "var(--font-display)",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
         ]
       },
       "colors": {
@@ -109,7 +116,7 @@ const tailwindConfig: Config = {
       }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 };
 
 export default tailwindConfig;

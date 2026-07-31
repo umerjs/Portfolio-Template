@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, MessageCircle, Mail, ArrowUpRight, MapPin } from 'lucide-react';
-import MagneticButton from './ui/MagneticButton';
-import SplitText from './ui/SplitText';
-import SpotlightCard from './ui/SpotlightCard';
+import SplitText from './reactbits/SplitText';
+import SpotlightCard from './reactbits/SpotlightCard';
 import { personalInfo, socialLinks, navLinks, footerAbout } from '../data/data';
 
 const navigate = navLinks.map(l => ({ label: l.label, href: `#${l.id}` }));
@@ -26,10 +25,15 @@ export default function Footer() {
 
       {/* Big CTA */}
       <div className="container mx-auto px-5 sm:px-6 lg:px-8 py-24 text-center relative">
-        <MagneticButton strength={0.15}>
-          <a href={`mailto:${personalInfo.email}`} className="inline-block group">
-            <h2 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter group-hover:text-primary transition-colors duration-500">
-              <SplitText text="LET'S TALK" staggerDelay={0.05} />
+        <a href={`mailto:${personalInfo.email}`} className="inline-block group">
+            <h2 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter font-display text-aurora">
+              <SplitText
+                text="LET'S TALK"
+                tag="span"
+                textAlign="center"
+                duration={0.9}
+                delay={40}
+              />
             </h2>
             <motion.div
               className="flex items-center justify-center gap-2 mt-6"
@@ -40,14 +44,13 @@ export default function Footer() {
               <p className="font-mono text-sm text-muted-foreground tracking-wider">{personalInfo.email}</p>
               <ArrowUpRight size={14} className="text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
             </motion.div>
-          </a>
-        </MagneticButton>
+        </a>
       </div>
 
       {/* Links grid */}
       <div className="border-t border-border/50">
         <div className="container mx-auto px-5 sm:px-6 lg:px-8 py-14">
-        <SpotlightCard className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <SpotlightCard spotlightColor="rgba(91, 232, 255, 0.15)" className="!bg-card !border-border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <h4 className="font-mono text-xs text-primary tracking-wider mb-5">ABOUT</h4>
             <p className="text-sm text-muted-foreground leading-relaxed">{footerAbout}</p>

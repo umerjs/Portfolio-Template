@@ -1,34 +1,30 @@
 # Muhammad Umer — Portfolio
 
-Full-stack developer portfolio built with React, TypeScript, Tailwind CSS, and Framer Motion.
+Dark, editorial portfolio for **Muhammad Umer** (`UMER.DEV`), a Full-Stack Developer based in Karachi, Pakistan. Built with Vite + React 18 + TypeScript + Tailwind CSS + Framer Motion, with the animated UI powered by [React Bits](https://www.reactbits.dev) components.
 
-## Stack
+## Tech Stack
 
-- **React 18** + **TypeScript**
-- **Vite** — build tool / dev server
-- **Tailwind CSS** — styling
-- **Framer Motion** — animations
-- **lucide-react** — icons
+- **Vite** + **React 18** + **TypeScript**
+- **Tailwind CSS** (dark/cinematic theme: near-black bg, cyan + violet/magenta accents, Space Grotesk + JetBrains Mono)
+- **Framer Motion** (page/scroll micro-interactions)
+- **React Bits** vendored components: SplitText, Aurora, BorderGlow, CountUp, DecryptedText, LogoLoop, Magnet, Particles, PillNav, SpotlightCard, TiltedCard
+- **EmailJS** contact form (no backend required)
 
-## Getting started
+## Getting Started
 
 ```bash
 npm install
-cp .env.example .env   # then fill in your EmailJS keys, see below
-npm run dev
+npm run dev        # start dev server
+npm run build      # type-check (tsc -b) + production build
+npm run lint       # ESLint (first-party code only; reactbits/ is vendored and ignored)
+npm run preview    # preview the production build
 ```
 
-Opens at `http://localhost:5173`.
+The build should complete with **zero errors and zero warnings**. `npm run lint` must pass clean.
 
-## Contact form (EmailJS)
+## Contact Form (EmailJS)
 
-The contact form sends real email via [EmailJS](https://www.emailjs.com) — no backend needed.
-
-1. Create a free EmailJS account.
-2. Add an **Email Service** (e.g. Gmail) — this gives you a **Service ID**.
-3. Create an **Email Template** with these variables: `from_name`, `reply_to`, `subject`, `message`, `to_email` — this gives you a **Template ID**.
-4. Grab your **Public Key** from Account → API Keys.
-5. Copy `.env.example` to `.env` and fill in the three values:
+The contact form reads three variables from `.env.local` (see `.env.example`):
 
 ```
 VITE_EMAILJS_SERVICE_ID=your_service_id
@@ -36,59 +32,70 @@ VITE_EMAILJS_TEMPLATE_ID=your_template_id
 VITE_EMAILJS_PUBLIC_KEY=your_public_key
 ```
 
-Until `.env` is filled in, the form will show a friendly "not configured yet" error instead of silently failing. `.env` is gitignored — when deploying (Vercel/Netlify), add the same three variables in your host's environment variable settings.
+1. Create a free account at https://www.emailjs.com.
+2. Add an **Email Service** (e.g. Gmail) and an **Email Template** with variables like `from_name`, `reply_to`, `subject`, `message`, `to_email`.
+3. Copy the Service ID, Template ID, and Public Key into `.env.local`.
+4. Restart the dev server.
 
-## Editing your content
+Never commit private keys — only the public key belongs in client code.
 
-All personal info and project data live in two files — edit these, not the components:
+## React Bits
 
-- **`src/data/data.ts`** — name, bio, tagline, stats, tech stack, experience, socials, SEO
-- **`src/data/projects.ts`** — your project list
+React Bits components are vendored into `src/components/reactbits/` via the shadcn CLI:
 
-## Scripts
+```bash
+npx shadcn@latest add @react-bits/<Name>-TS-TW --yes --overwrite
+```
 
-| Command           | Description                          |
-|--------------------|--------------------------------------|
-| `npm run dev`      | Start local dev server               |
-| `npm run build`    | Type-check and build for production  |
-| `npm run preview`  | Preview the production build locally |
-| `npm run lint`     | Run ESLint                           |
+To add new ones, install them, move the emitted files into `src/components/reactbits/`, and clean up any stray `@\` folder. The vendored code is intentionally **excluded from ESLint** (`eslint.config.js` ignores `src/components/reactbits/**`).
 
-## Project structure
+Minor, documented adaptations:
+- `PillNav` gained an optional `logoHref` prop so the logo links to `#home` instead of the first nav item. Its `react-router-dom` `Link` usages were converted to plain `<a>` tags (this project uses anchor navigation), so the router dependency could be dropped.
+- `SplitText` gained a module-level `WeakSet` guard so each element animates exactly once — React 18 StrictMode double-invokes effects in dev, which used to replay the char animation and leave the text re-split.
+- `TiltedCard` cards use a shared `svgGradientImage()` helper (`src/lib/cardArt.ts`) as their `imageSrc`, with real content passed via `overlayContent`.
+- Tailwind ambiguous-class warnings were silenced by rewriting vendored class strings as explicit arbitrary properties.
+
+Custom styling helpers in `src/index.css`:
+- `font-display` — the `Clash Display` headline font (loaded from Fontshare), applied to the hero, section headings, and the footer `LET'S TALK` CTA.
+- `.text-aurora` — animated cyan → violet → magenta gradient text that also works on React Bits `SplitText` characters (`.split-char`), used on the hero tagline line and all headings.
+
+## Editing Content
+
+All personal data lives in **one place**:
+
+- `src/data/data.ts` — name, brand, role, tagline, socials, SEO, nav links, marquees, bio, stats, services, tech stack, experience, footer text. Look for `// TODO:` markers (resume URL, real domain).
+- `src/data/projects.ts` — projects; the first item is auto-rendered as the featured project.
+
+Update these two files and every section updates automatically.
+
+## Project Structure
 
 ```
 src/
-  data/
-    data.ts        # personal info, bio, stats, tech stack, experience, socials, SEO
-    projects.ts     # your project list
-  components/
-    ui/            # Reusable animated primitives (MagneticButton, TiltCard3D, etc.)
-    Hero.tsx
-    About.tsx
-    Projects.tsx
-    Experience.tsx
-    TechStack.tsx
-    Contact.tsx
-    Footer.tsx
-    Navbar.tsx
-    SEO.tsx
-  App.tsx
-  main.tsx
-  index.css
+├── App.tsx                     # layout + Particles background
+├── components/
+│   ├── Navbar.tsx              # floating pill navbar (React Bits PillNav)
+│   ├── Hero.tsx                # Aurora bg, SplitText headline, Magnet CTAs, LogoLoop marquee
+│   ├── TechStack.tsx           # LogoLoop marquees + TiltedCard category cards
+│   ├── Projects.tsx            # featured project + TiltedCard grid
+│   ├── About.tsx               # TiltedCard photo, CountUp stats, service cards
+│   ├── Experience.tsx          # DecryptedText job rows
+│   ├── Contact.tsx             # EmailJS form in BorderGlow card
+│   ├── Footer.tsx              # LET'S TALK CTA + SpotlightCard links
+│   ├── IdCard.tsx              # hand-rolled 3D ID card (hero)
+│   ├── SEO.tsx                 # meta tags / OG / canonical
+│   ├── reactbits/              # vendored React Bits components
+│   └── ui/                     # first-party UI (CustomCursor, SectionHeading)
+├── data/                       # all editable content
+├── lib/cardArt.ts              # gradient art helper for TiltedCard
+├── index.css                   # Tailwind theme (colors, fonts)
 ```
 
-## Before deploying
+## Pre-Deploy Checklist
 
-- [ ] Add your EmailJS keys to `.env` (or your host's env settings) so the contact form actually sends — see above.
-- [ ] Replace the placeholder Resume link (`personalInfo.resumeUrl` in `src/data/data.ts`) with a real, hosted PDF.
-- [ ] Swap the placeholder employers in `src/data/data.ts` → `experience` for your real work history.
-- [ ] Update `seo.url` in `src/data/data.ts` once you know your real deployed domain.
-- [ ] Add real project screenshots instead of the color-block placeholders in `Projects.tsx`.
-
-## Deployment
-
-Any static host works well with Vite output (`npm run build` → `dist/`):
-
-- **Vercel** — `vercel deploy`
-- **Netlify** — drag-and-drop the `dist/` folder or connect the repo
-- **GitHub Pages** — use `vite-plugin-gh-pages` or push `dist/` to a `gh-pages` branch
+1. `npm run lint` and `npm run build` pass with zero errors.
+2. Add EmailJS keys to `.env.local` and confirm a test message arrives.
+3. Replace `resumeUrl` in `src/data/data.ts` with a real hosted PDF.
+4. Update `seo.url` in `src/data/data.ts` to the real domain.
+5. Review `experience` entries and `stats` so the timeline is consistent.
+6. Deploy the `dist/` folder to any static host (Vercel, Netlify, GitHub Pages).

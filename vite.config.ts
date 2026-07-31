@@ -9,4 +9,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          animation: ['framer-motion', 'motion', 'gsap', '@gsap/react'],
+          gl: ['ogl'],
+        },
+      },
+    },
+  },
 });

@@ -2,16 +2,17 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import SectionHeading from './ui/SectionHeading';
-import TiltCard3D from './ui/TiltCard3D';
-import MagneticButton from './ui/MagneticButton';
-import { useTextScramble } from './ui/TextScramble';
+import TiltedCard from './reactbits/TiltedCard';
+import Magnet from './reactbits/Magnet';
+import DecryptedText from './reactbits/DecryptedText';
+import { svgGradientImage } from '../lib/cardArt';
 import { projects, type Project } from '../data/projects';
 
 export default function Projects() {
   const [featured, ...rest] = projects;
 
   return (
-    <section id="work" className="py-24 md:py-32 relative">
+    <section id="work" className="py-24 md:py-32 relative scroll-mt-24">
       <div className="container mx-auto px-5 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="N°02 / Selected Work" heading="PROJECTS" description="A selection of recent work spanning e-commerce, landing pages, and interactive applications." />
         <FeaturedProject project={featured} />
@@ -70,11 +71,11 @@ function FeaturedProject({ project }: { project: Project }) {
             ))}
           </div>
           <div className="mt-8">
-            <MagneticButton>
+            <Magnet magnetStrength={0.3} padding={60}>
               <span className="inline-flex items-center gap-2 font-mono text-sm text-primary group-hover:gap-4 transition-all">
                 View Project <ArrowUpRight size={16} className="group-hover:rotate-45 transition-transform" />
               </span>
-            </MagneticButton>
+            </Magnet>
           </div>
         </div>
         <motion.div
@@ -100,43 +101,59 @@ function FeaturedProject({ project }: { project: Project }) {
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const { display, triggerScramble } = useTextScramble(project.title, 30);
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, rotateY: -5 }}
-      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="h-[380px]"
     >
-      <TiltCard3D glareColor={project.accent} tiltAmount={10}>
-        <a href={project.url} target="_blank" rel="noopener noreferrer" className="block group" onMouseEnter={triggerScramble}>
-          <div className="h-44 flex items-center justify-center relative overflow-hidden"
-            style={{ background: `linear-gradient(135deg, ${project.accent}12, ${project.accent}04)` }}>
-            <motion.div className="absolute inset-0" style={{ background: `radial-gradient(circle at 50% 120%, ${project.accent}20, transparent 60%)` }} />
-            <span className="font-mono text-2xl font-bold relative z-10" style={{ color: project.accent }}>{project.title}</span>
-            <motion.div className="absolute top-3 right-3 w-8 h-8 rounded-full border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
-              style={{ borderColor: `${project.accent}40` }}
-              whileHover={{ scale: 1.1 }}>
-              <ExternalLink size={12} style={{ color: project.accent }} />
-            </motion.div>
-          </div>
-          <div className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-[10px] tracking-[0.3em]" style={{ color: project.accent }}>{project.num}</span>
-              <span className="font-mono text-[10px] text-muted-foreground/40">{project.subtitle}</span>
+      <TiltedCard
+        imageSrc={svgGradientImage(project.accent, '#5be8ff', 480, 380)}
+        altText={project.title}
+        containerHeight="100%"
+        containerWidth="100%"
+        imageWidth="100%"
+        imageHeight="380px"
+        rotateAmplitude={9}
+        scaleOnHover={1.03}
+        showMobileWarning={false}
+        showTooltip={false}
+        displayOverlayContent
+        overlayContent={
+          <a href={project.url} target="_blank" rel="noopener noreferrer" className="block group w-full h-[380px]">
+            <div className="h-44 flex items-center justify-center relative overflow-hidden">
+              <span className="font-mono text-2xl font-bold relative z-10" style={{ color: project.accent }}>
+                <DecryptedText
+                  text={project.title}
+                  animateOn="hover"
+                  speed={40}
+                  maxIterations={12}
+                />
+              </span>
+              <div className="absolute top-3 right-3 w-8 h-8 rounded-full border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
+                style={{ borderColor: `${project.accent}40` }}>
+                <ExternalLink size={12} style={{ color: project.accent }} />
+              </div>
             </div>
-            <h3 className="font-bold text-xl group-hover:text-primary transition-colors">{display}</h3>
-            <p className="text-sm text-muted-foreground mt-3 line-clamp-2 leading-relaxed">{project.desc}</p>
-            <div className="flex flex-wrap gap-1.5 mt-4">
-              {project.tags.slice(0, 3).map(t => (
-                <span key={t} className="px-2 py-0.5 rounded-full text-[10px] font-mono" style={{ background: `${project.accent}10`, color: `${project.accent}cc` }}>{t}</span>
-              ))}
-              {project.tags.length > 3 && <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-accent text-muted-foreground">+{project.tags.length - 3}</span>}
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-mono text-[10px] tracking-[0.3em]" style={{ color: project.accent }}>{project.num}</span>
+                <span className="font-mono text-[10px] text-muted-foreground/40">{project.subtitle}</span>
+              </div>
+              <h3 className="font-bold text-xl group-hover:text-primary transition-colors">{project.title}</h3>
+              <p className="text-sm text-muted-foreground mt-3 line-clamp-2 leading-relaxed">{project.desc}</p>
+              <div className="flex flex-wrap gap-1.5 mt-4">
+                {project.tags.slice(0, 3).map(t => (
+                  <span key={t} className="px-2 py-0.5 rounded-full text-[10px] font-mono" style={{ background: `${project.accent}10`, color: `${project.accent}cc` }}>{t}</span>
+                ))}
+                {project.tags.length > 3 && <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-accent text-muted-foreground">+{project.tags.length - 3}</span>}
+              </div>
             </div>
-          </div>
-        </a>
-      </TiltCard3D>
+          </a>
+        }
+      />
     </motion.div>
   );
 }
