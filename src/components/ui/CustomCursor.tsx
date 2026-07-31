@@ -1,64 +1,81 @@
-import { useEffect, useState, useCallback } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { useEffect, useState, useCallback } from "react";
+import { motion, useSpring, useMotionValue } from "framer-motion";
 
 const CURSOR_LABELS: Record<string, string> = {
-  A: 'View',
-  BUTTON: 'Click',
-  INPUT: 'Type',
-  TEXTAREA: 'Type',
-  a: 'View',
-  button: 'Click',
+  A: "View",
+  BUTTON: "Click",
+  INPUT: "Type",
+  TEXTAREA: "Type",
+  a: "View",
+  button: "Click",
 };
 
+const isTouchDevice = () =>
+  typeof window !== "undefined" &&
+  ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
 export default function CustomCursor() {
-  const [visible, setVisible] = useState(false);
-  const [label, setLabel] = useState('');
+  const [visible, setVisible] = useState(() => !isTouchDevice());
+  const [label, setLabel] = useState("");
   const [isHovering, setIsHovering] = useState(false);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  const springX = useSpring(cursorX, { stiffness: 500, damping: 28, mass: 0.5 });
-  const springY = useSpring(cursorY, { stiffness: 500, damping: 28, mass: 0.5 });
+  const springX = useSpring(cursorX, {
+    stiffness: 500,
+    damping: 28,
+    mass: 0.5,
+  });
+  const springY = useSpring(cursorY, {
+    stiffness: 500,
+    damping: 28,
+    mass: 0.5,
+  });
   const ringX = useSpring(cursorX, { stiffness: 150, damping: 20, mass: 0.8 });
   const ringY = useSpring(cursorY, { stiffness: 150, damping: 20, mass: 0.8 });
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    cursorX.set(e.clientX);
-    cursorY.set(e.clientY);
-    setVisible(true);
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+      setVisible(true);
 
-    const target = e.target as HTMLElement;
-    const interactive = target.closest('a, button, input, textarea, [data-cursor]');
+      const target = e.target as HTMLElement;
+      const interactive = target.closest(
+        "a, button, input, textarea, [data-cursor]",
+      );
 
-    if (interactive) {
-      setIsHovering(true);
-      const customLabel = interactive.getAttribute('data-cursor');
-      const tagLabel = CURSOR_LABELS[interactive.tagName] || '';
-      setLabel(customLabel || tagLabel);
-    } else {
-      setIsHovering(false);
-      setLabel('');
-    }
-  }, [cursorX, cursorY]);
+      if (interactive) {
+        setIsHovering(true);
+        const customLabel = interactive.getAttribute("data-cursor");
+        const tagLabel = CURSOR_LABELS[interactive.tagName] || "";
+        setLabel(customLabel || tagLabel);
+      } else {
+        setIsHovering(false);
+        setLabel("");
+      }
+    },
+    [cursorX, cursorY],
+  );
 
   useEffect(() => {
     // Only show on non-touch devices
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouchDevice) return;
+    if (isTouchDevice()) return;
 
-    document.documentElement.style.cursor = 'none';
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', () => setVisible(false));
-    window.addEventListener('mouseenter', () => setVisible(true));
+    document.documentElement.style.cursor = "none";
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseleave", () => setVisible(false));
+    window.addEventListener("mouseenter", () => setVisible(true));
 
     // Hide cursor on all interactive elements
-    const style = document.createElement('style');
-    style.textContent = 'a,button,input,textarea,[data-cursor]{cursor:none!important}';
+    const style = document.createElement("style");
+    style.textContent =
+      "a,button,input,textarea,[data-cursor]{cursor:none!important}";
     document.head.appendChild(style);
 
     return () => {
-      document.documentElement.style.cursor = '';
-      window.removeEventListener('mousemove', handleMouseMove);
+      document.documentElement.style.cursor = "";
+      window.removeEventListener("mousemove", handleMouseMove);
       style.remove();
     };
   }, [handleMouseMove]);
@@ -82,10 +99,14 @@ export default function CustomCursor() {
           height: isHovering ? 64 : 40,
           marginLeft: isHovering ? -32 : -20,
           marginTop: isHovering ? -32 : -20,
-          borderColor: isHovering ? 'hsl(var(--primary) / 0.8)' : 'hsl(var(--primary) / 0.3)',
-          backgroundColor: isHovering ? 'hsl(var(--primary) / 0.08)' : 'transparent',
+          borderColor: isHovering
+            ? "hsl(var(--primary) / 0.8)"
+            : "hsl(var(--primary) / 0.3)",
+          backgroundColor: isHovering
+            ? "hsl(var(--primary) / 0.08)"
+            : "transparent",
         }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         {/* Label text */}
         <motion.span

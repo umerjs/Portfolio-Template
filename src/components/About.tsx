@@ -38,7 +38,7 @@ export default function About() {
     >
       <div className="container mx-auto px-5 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="N°03 / About Me"
+          eyebrow="N°04 / About Me"
           heading="WHO'S BEHIND THE SCREEN"
         />
 

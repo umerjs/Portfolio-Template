@@ -60,7 +60,7 @@ export default function Hero() {
         <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mt-8">
           <div className="flex-1 max-w-3xl">
             <motion.p
-              className="font-mono text-sm text-muted-foreground mb-6 tracking-widest"
+              className="font-mono text-sm text-foreground/85 mb-6 tracking-widest"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -219,7 +219,7 @@ export default function Hero() {
 function MetaRow() {
   return (
     <motion.div
-      className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted-foreground tracking-wider sm:justify-between"
+      className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-foreground/85 tracking-wider sm:justify-between"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1, duration: 0.5 }}

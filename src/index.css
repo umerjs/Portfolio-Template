@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap");
 
@@ -45,9 +44,10 @@
     --sidebar-border: 214 30% 18%;
     --sidebar-ring: 190 100% 68%;
 
-    --font-sans: 'Space Grotesk', 'Helvetica Neue', sans-serif;
-    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-    --font-display: 'Clash Display', 'Space Grotesk', 'Helvetica Neue', sans-serif;
+    --font-sans: "Space Grotesk", "Helvetica Neue", sans-serif;
+    --font-mono: "JetBrains Mono", "Courier New", monospace;
+    --font-display:
+      "Clash Display", "Space Grotesk", "Helvetica Neue", sans-serif;
 
     --shadow-x: 0px;
     --shadow-y: 1px;
@@ -56,13 +56,55 @@
     --shadow-opacity: 0.4;
     --shadow-color: #000000;
 
-    --shadow-2xs: var(--shadow-x) var(--shadow-y) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
-    --shadow-xs: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
-    --shadow-sm: var(--shadow-x) var(--shadow-y) calc(var(--shadow-blur) * 1.5) var(--shadow-spread) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
-    --shadow-md: calc(var(--shadow-x) * 2) calc(var(--shadow-y) * 2) calc(var(--shadow-blur) * 3) calc(var(--shadow-spread) - 1px) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
-    --shadow-lg: calc(var(--shadow-x) * 4) calc(var(--shadow-y) * 4) calc(var(--shadow-blur) * 5) calc(var(--shadow-spread) - 3px) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
-    --shadow-xl: calc(var(--shadow-x) * 6) calc(var(--shadow-y) * 6) calc(var(--shadow-blur) * 7) calc(var(--shadow-spread) - 5px) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
-    --shadow-2xl: calc(var(--shadow-x) * 8) calc(var(--shadow-y) * 8) calc(max(0px, var(--shadow-blur) * 9 - 8px)) calc(var(--shadow-spread) - 12px) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 250%), transparent);
+    --shadow-2xs: var(--shadow-x) var(--shadow-y)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+      );
+    --shadow-xs: var(--shadow-x) var(--shadow-y) var(--shadow-blur)
+      var(--shadow-spread)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+      );
+    --shadow-sm: var(--shadow-x) var(--shadow-y) calc(var(--shadow-blur) * 1.5)
+      var(--shadow-spread)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+      );
+    --shadow-md: calc(var(--shadow-x) * 2) calc(var(--shadow-y) * 2)
+      calc(var(--shadow-blur) * 3) calc(var(--shadow-spread) - 1px)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+      );
+    --shadow-lg: calc(var(--shadow-x) * 4) calc(var(--shadow-y) * 4)
+      calc(var(--shadow-blur) * 5) calc(var(--shadow-spread) - 3px)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+      );
+    --shadow-xl: calc(var(--shadow-x) * 6) calc(var(--shadow-y) * 6)
+      calc(var(--shadow-blur) * 7) calc(var(--shadow-spread) - 5px)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+      );
+    --shadow-2xl: calc(var(--shadow-x) * 8) calc(var(--shadow-y) * 8)
+      calc(max(0px, var(--shadow-blur) * 9 - 8px))
+      calc(var(--shadow-spread) - 12px)
+      color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 250%),
+        transparent
+      );
     --shadow: var(--shadow-md);
   }
 }
@@ -77,13 +119,18 @@
   html {
     scroll-behavior: smooth;
   }
-  html, body {
+  html,
+  body {
     overflow-x: hidden;
     max-width: 100vw;
   }
   @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -97,13 +144,13 @@
   }
 
   /* Animated aurora gradient text.
-     IMPORTANT: the gradient + background-clip:text live on the element that has
-     .text-aurora, NOT on GSAP SplitText chars. GSAP forces each char onto its own
-     composited layer (will-change/transform); applying background-clip:text to
-     composited elements makes Chrome drop the clipped background, so the chars
-     render fully transparent (invisible). Keeping the clip on the static parent
-     is compositing-safe — the descendant chars just need transparent fills so the
-     parent's gradient shows through their glyphs. */
+     The gradient + background-clip:text must live on the SAME element whose
+     glyphs you want colored. GSAP forces each SplitText char onto its own
+     composited layer (will-change/transform), and a parent's background-clip:text
+     cannot paint through those composited children — so putting the clip only on
+     the parent makes every char render fully transparent (invisible). Fix: apply
+     the gradient + clip to each char directly, where the clip survives
+     compositing. The parent keeps its own copy as a fallback for non-split text. */
   @supports ((-webkit-background-clip: text) or (background-clip: text)) {
     .text-aurora {
       background-image: linear-gradient(
@@ -123,9 +170,22 @@
     }
 
     .text-aurora .split-char,
-    .text-aurora .split-word {
+    .text-aurora .split-word,
+    .text-aurora .split-line {
+      background-image: linear-gradient(
+        90deg,
+        #5be8ff 0%,
+        #a78bfa 25%,
+        #f472b6 50%,
+        #5be8ff 75%,
+        #a78bfa 100%
+      );
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
+      animation: aurora-text 8s linear infinite;
     }
   }
 

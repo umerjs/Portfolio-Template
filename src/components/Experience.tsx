@@ -1,18 +1,20 @@
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-import SectionHeading from './ui/SectionHeading';
-import DecryptedText from './reactbits/DecryptedText';
-import { experience as jobs } from '../data/data';
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import SectionHeading from "./ui/SectionHeading";
+import DecryptedText from "./reactbits/DecryptedText";
+import { experience as jobs } from "../data/data";
 
 export default function Experience() {
   return (
     <section id="experience" className="py-24 md:py-32 relative scroll-mt-24">
       {/* Subtle side glow */}
-      <div className="absolute left-0 top-1/4 w-72 h-72 rounded-full blur-[180px] pointer-events-none"
-        style={{ background: 'hsl(var(--primary) / 0.06)' }} />
+      <div
+        className="absolute left-0 top-1/4 w-72 h-72 rounded-full blur-[180px] pointer-events-none"
+        style={{ background: "hsl(var(--primary) / 0.06)" }}
+      />
 
       <div className="container mx-auto px-5 sm:px-6 lg:px-8">
-        <SectionHeading eyebrow="N°04 / Career" heading="WHERE I'VE WORKED" />
+        <SectionHeading eyebrow="N°05 / Career" heading="WHERE I'VE WORKED" />
 
         <div className="space-y-0">
           {jobs.map((job, i) => (
@@ -24,14 +26,18 @@ export default function Experience() {
   );
 }
 
-function JobRow({ job, index }: { job: typeof jobs[0]; index: number }) {
+function JobRow({ job, index }: { job: (typeof jobs)[0]; index: number }) {
   return (
     <motion.div
       className="group relative border-b border-border/50 py-10 md:py-12 cursor-default"
       initial={{ opacity: 0, x: -40 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      transition={{
+        delay: index * 0.15,
+        duration: 0.7,
+        ease: [0.16, 1, 0.3, 1],
+      }}
     >
       {/* Hover highlight bg */}
       <div className="absolute inset-0 bg-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500 -mx-4 px-4 rounded-lg" />
@@ -56,7 +62,9 @@ function JobRow({ job, index }: { job: typeof jobs[0]; index: number }) {
                 <ArrowUpRight size={20} className="text-primary" />
               </motion.span>
             </h3>
-            <span className="font-mono text-xs text-muted-foreground tracking-wider shrink-0">{job.period}</span>
+            <span className="font-mono text-xs text-muted-foreground tracking-wider shrink-0">
+              {job.period}
+            </span>
           </div>
           <p className="font-mono text-sm text-muted-foreground mt-1.5">
             <DecryptedText
@@ -70,7 +78,7 @@ function JobRow({ job, index }: { job: typeof jobs[0]; index: number }) {
           <motion.p
             className="text-muted-foreground mt-4 leading-relaxed max-w-2xl"
             initial={{ height: 0, opacity: 0 }}
-            whileInView={{ height: 'auto', opacity: 1 }}
+            whileInView={{ height: "auto", opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.15 + 0.3, duration: 0.5 }}
           >
@@ -86,7 +94,7 @@ function JobRow({ job, index }: { job: typeof jobs[0]; index: number }) {
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
         transition={{ delay: index * 0.15 + 0.2, duration: 0.8 }}
-        style={{ transformOrigin: 'left' }}
+        style={{ transformOrigin: "left" }}
       />
     </motion.div>
   );

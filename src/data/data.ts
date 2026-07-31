@@ -1,9 +1,3 @@
-// ─────────────────────────────────────────────────────────────
-// PERSONAL DATA
-// Everything on the site that's "about you" lives here.
-// Edit this file to update your info across every section at once.
-// ─────────────────────────────────────────────────────────────
-
 export const personalInfo = {
   name: "Muhammad Umer",
   initials: "MU",
